@@ -8,8 +8,9 @@
   </head>
 
   <body>
-    <div class="inputs" id="inputUi">
+    <div class="inputs" id="ukuranDasar">
       <div class="inputsContainer" id="inputsContainer">
+        <p>Ukuran Dasar</p>
         <div class="jarakDinding">
           <label for="jarakDinding">Jarak Dinding</label>
           <input
@@ -20,17 +21,6 @@
             max="1000"
           />
           <p id="jarakDindingValue"></p>
-        </div>
-        <div class="kecepatanBenda">
-          <label for="kecepatanBenda">Kecepatan Benda</label>
-          <input
-            type="range"
-            name="kecepatanBenda"
-            id="kecepatanBenda"
-            min="0"
-            max="200"
-          />
-          <p id="kecepatanBendaValue"></p>
         </div>
         <div class="tinggiBenda">
           <label for="tinggiBenda">Tinggi Benda</label>
@@ -49,10 +39,38 @@
             type="range"
             name="diameterBenda"
             id="diameterBenda"
-            min="50"
-            max="100"
+            min="100"
+            max="300"
           />
           <p id="diameterBendaValue"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="inputs" id="gerakBenda">
+      <div class="inputsContainer" id="inputsContainer">
+        <p>Gerak Benda</p>
+        <div class="kecepatanBenda">
+          <label for="kecepatanBenda">Kecepatan Benda</label>
+          <input
+            type="range"
+            name="kecepatanBenda"
+            id="kecepatanBenda"
+            min="50"
+            max="300"
+          />
+          <p id="kecepatanBendaValue"></p>
+        </div>
+        <div class="gayaBenda">
+          <label for="gayaBenda">Gaya Benda</label>
+          <input
+            type="range"
+            name="gayaBenda"
+            id="gayaBenda"
+            min="50"
+            max="500"
+          />
+          <p id="gayaBendaValue"></p>
         </div>
       </div>
     </div>
