@@ -5,27 +5,31 @@ let CanvasMiddleY = CANVAS.height / 2;
 
 // Get Input ID
 const jarakDindingID = document.getElementById("jarakDinding");
-const kecepatanBendaID = document.getElementById("kecepatanBenda");
 const tinggiBendaID = document.getElementById("tinggiBenda");
 const diameterBendaID = document.getElementById("diameterBenda");
+const kecepatanBendaID = document.getElementById("kecepatanBenda");
+const gayaBendaID = document.getElementById("gayaBenda");
 
 // Get Text Value
 let jarakDindingValText = document.getElementById("jarakDindingValue");
-let kecepatanBendaValText = document.getElementById("kecepatanBendaValue");
 let tinggiBendaValText = document.getElementById("tinggiBendaValue");
 let diameterBendaValText = document.getElementById("diameterBendaValue");
+let kecepatanBendaValText = document.getElementById("kecepatanBendaValue");
+let gayaBendaValText = document.getElementById("gayaBendaValue");
 
 // Get User Input
 let jarakDindingInput = Number(jarakDindingID.value);
-let kecepatanBendaInput = Number(kecepatanBendaID.value);
 let tinggiBendaInput = Number(tinggiBendaID.value);
 let diameterBendaInput = Number(diameterBendaID.value);
+let kecepatanBendaInput = Number(kecepatanBendaID.value);
+let gayaBendaInput = Number(gayaBendaID.value);
 
 function refresh_Text_Input() {
   jarakDindingValText.textContent = jarakDindingID.value;
-  kecepatanBendaValText.textContent = kecepatanBendaID.value;
   tinggiBendaValText.textContent = tinggiBendaID.value;
   diameterBendaValText.textContent = diameterBendaID.value;
+  kecepatanBendaValText.textContent = kecepatanBendaID.value;
+  gayaBendaValText.textContent = gayaBendaID.value;
 }
 refresh_Text_Input();
 
@@ -33,11 +37,6 @@ jarakDindingID.addEventListener("input", () => {
   jarakDindingInput = Number(jarakDindingID.value);
   refresh_Text_Input();
   refreshDraw();
-});
-
-kecepatanBendaID.addEventListener("input", () => {
-  kecepatanBendaInput = Number(kecepatanBendaID.value);
-  refresh_Text_Input();
 });
 
 tinggiBendaID.addEventListener("input", () => {
@@ -48,6 +47,18 @@ tinggiBendaID.addEventListener("input", () => {
 
 diameterBendaID.addEventListener("input", () => {
   diameterBendaInput = Number(diameterBendaID.value);
+  refresh_Text_Input();
+  refreshDraw();
+});
+
+kecepatanBendaID.addEventListener("input", () => {
+  kecepatanBendaInput = Number(kecepatanBendaID.value);
+  refresh_Text_Input();
+  refreshDraw();
+});
+
+gayaBendaID.addEventListener("input", () => {
+  gayaBendaInput = Number(gayaBendaID.value);
   refresh_Text_Input();
   refreshDraw();
 });
@@ -82,6 +93,7 @@ function drawPixel(x, y, colour = "black") {
   ctx.fillRect(x, y, 1.1, 1.1);
 }
 
+// Garis Solid
 function garisDDA(x1, y1, x2, y2, colour) {
   let dx = x2 - x1;
   let dy = y2 - y1;
@@ -101,6 +113,42 @@ function garisDDA(x1, y1, x2, y2, colour) {
 
   for (let s = 0; s < step; s += 1) {
     drawPixel(x, y, colour);
+    x = x + x_inc;
+    y = y + y_inc;
+  }
+}
+
+// Garis Putus
+function garisDash(x1, y1, x2, y2, colour) {
+  let dx = x2 - x1;
+  let dy = y2 - y1;
+  let step = 0;
+  let dash = 0;
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    step = Math.abs(dx);
+  } else {
+    step = Math.abs(dy);
+  }
+
+  let x_inc = dx / step;
+  let y_inc = dy / step;
+
+  let x = x1;
+  let y = y1;
+
+  for (let s = 0; s < step; s += 1) {
+    if (dash < 4) {
+      drawPixel(x, y, colour);
+      dash += 1;
+    } else if (dash == 4) {
+      dash = 9;
+    } else {
+      dash -= 1;
+      if (dash == 5) {
+        dash = 0;
+      }
+    }
     x = x + x_inc;
     y = y + y_inc;
   }
@@ -141,7 +189,7 @@ function dinding_lantai() {
     jarakDindingInput,
     0,
     jarakDindingInput,
-    yLantai + 4,  
+    yLantai + 4,
     "biruTua"
   );
 
@@ -153,6 +201,24 @@ function dinding_lantai() {
     yLantai + 4,
     "biruTua"
   );
+
+  let dash = 0;
+  
+  // Garis Dinding
+  for (let index = 0; index <= yLantai; index++) {
+    if (dash < 80) {
+      dash++;
+    } else {
+      garisDash(0, index, xDinding_Kiri, index, "biruTua");
+      garisDash(xDinding_Kanan, index, CANVAS.width, index, "biruTua");
+      dash = 0;
+    }
+
+    if (index == yLantai) {
+      garisDash(0, index - 10, xDinding_Kiri, index - 10, "biruTua");
+      garisDash(xDinding_Kanan, index - 10, CANVAS.width, index - 10, "biruTua");
+    }
+  }
 
   // Lantai
   for (let index = 0; index < 5; index++) {
@@ -173,7 +239,7 @@ function refreshDraw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
   requestAnimationFrame(gambarBola);
   requestAnimationFrame(dinding_lantai);
-}   
+}
 
 /*
 Running

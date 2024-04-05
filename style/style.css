@@ -14,9 +14,6 @@ body {
 
 .inputs {
   display: flex;
-  top: 5px;
-  width: 95%;
-  height: 20px;
   padding: 0px;
   color: azure;
   justify-content: center;
@@ -25,15 +22,31 @@ body {
   border-radius: 16px;
 }
 
+#ukuranDasar {
+  bottom: 5px;
+  left: 5px;
+}
+
+#gerakBenda {
+  bottom: 50px;
+  right: 5px;
+}
+
 .inputsContainer {
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.inputsContainer p {
+  align-self: center;
 }
 
 .inputsContainer div {
   display: flex;
   justify-items: center;
   align-items: center;
-  margin: 0px 30px;
+  margin: 0px 20px;
 }
 
 .inputsContainer div input {
