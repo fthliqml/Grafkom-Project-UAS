@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/style/style.css" />
+  </head>
+
+  <body>
+    <div class="inputs" id="inputUi">
+      <div class="inputsContainer" id="inputsContainer">
+        <div class="jarakDinding">
+          <label for="jarakDinding">Jarak Dinding</label>
+          <input
+            type="range"
+            name="jarakDinding"
+            id="jarakDinding"
+            min="0"
+            max="1000"
+          />
+          <p id="jarakDindingValue"></p>
+        </div>
+        <div class="kecepatanBenda">
+          <label for="kecepatanBenda">Kecepatan Benda</label>
+          <input
+            type="range"
+            name="kecepatanBenda"
+            id="kecepatanBenda"
+            min="0"
+            max="200"
+          />
+          <p id="kecepatanBendaValue"></p>
+        </div>
+        <div class="tinggiBenda">
+          <label for="tinggiBenda">Tinggi Benda</label>
+          <input
+            type="range"
+            name="tinggiBenda"
+            id="tinggiBenda"
+            min="0"
+            max="1000"
+          />
+          <p id="tinggiBendaValue"></p>
+        </div>
+        <div class="diameterBenda">
+          <label for="diameterBenda">Diameter Benda</label>
+          <input
+            type="range"
+            name="diameterBenda"
+            id="diameterBenda"
+            min="50"
+            max="100"
+          />
+          <p id="diameterBendaValue"></p>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="myCanvas" height="1500" width="3000"></canvas>
+
+    <script src="/script/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+}
+
+#myCanvas {
+  border: solid 1px black;
+  height: 100%;
+  width: 100%;
+}
+
+.inputs {
+  display: flex;
+  top: 5px;
+  width: 95%;
+  height: 20px;
+  padding: 0px;
+  color: azure;
+  justify-content: center;
+  position: absolute;
+  background: rgba(46, 56, 64);
+  border-radius: 16px;
+}
+
+.inputsContainer {
+  display: flex;
+}
+
+.inputsContainer div {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  margin: 0px 30px;
+}
+
+.inputsContainer div input {
+  margin: 0px 10px;
+}
