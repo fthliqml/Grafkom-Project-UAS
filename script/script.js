@@ -7,6 +7,7 @@ let CanvasMiddleY = CANVAS.height / 2;
 const jarakDindingID = document.getElementById("jarakDinding");
 const tinggiBendaID = document.getElementById("tinggiBenda");
 const diameterBendaID = document.getElementById("diameterBenda");
+const koefisienRestitusiID = document.getElementById("koefisienRestitusi");
 const kecepatanBendaID = document.getElementById("kecepatanBenda");
 const gayaBendaID = document.getElementById("gayaBenda");
 
@@ -14,6 +15,9 @@ const gayaBendaID = document.getElementById("gayaBenda");
 let jarakDindingValText = document.getElementById("jarakDindingValue");
 let tinggiBendaValText = document.getElementById("tinggiBendaValue");
 let diameterBendaValText = document.getElementById("diameterBendaValue");
+let koefisienRestitusiValText = document.getElementById(
+  "koefisienRestitusiValue"
+);
 let kecepatanBendaValText = document.getElementById("kecepatanBendaValue");
 let gayaBendaValText = document.getElementById("gayaBendaValue");
 
@@ -21,6 +25,7 @@ let gayaBendaValText = document.getElementById("gayaBendaValue");
 let jarakDindingInput = Number(jarakDindingID.value);
 let tinggiBendaInput = Number(tinggiBendaID.value);
 let diameterBendaInput = Number(diameterBendaID.value);
+let koefisienRestitusiInput = Number(koefisienRestitusiID.value);
 let kecepatanBendaInput = Number(kecepatanBendaID.value);
 let gayaBendaInput = Number(gayaBendaID.value);
 
@@ -28,10 +33,10 @@ function refresh_Text_Input() {
   jarakDindingValText.textContent = jarakDindingID.value;
   tinggiBendaValText.textContent = tinggiBendaID.value;
   diameterBendaValText.textContent = diameterBendaID.value;
+  koefisienRestitusiValText.textContent = koefisienRestitusiID.value;
   kecepatanBendaValText.textContent = kecepatanBendaID.value;
   gayaBendaValText.textContent = gayaBendaID.value;
 }
-refresh_Text_Input();
 
 jarakDindingID.addEventListener("input", () => {
   jarakDindingInput = Number(jarakDindingID.value);
@@ -39,14 +44,24 @@ jarakDindingID.addEventListener("input", () => {
   refreshDraw();
 });
 
-tinggiBendaID.addEventListener("input", () => {
+function tinggiBendaFunc() {
   tinggiBendaInput = Number(tinggiBendaID.value);
   refresh_Text_Input();
   refreshDraw();
+}
+
+tinggiBendaID.addEventListener("input", () => {
+  tinggiBendaFunc();
 });
 
 diameterBendaID.addEventListener("input", () => {
   diameterBendaInput = Number(diameterBendaID.value);
+  refresh_Text_Input();
+  refreshDraw();
+});
+
+koefisienRestitusiID.addEventListener("input", () => {
+  koefisienRestitusiInput = Number(koefisienRestitusiID.value);
   refresh_Text_Input();
   refreshDraw();
 });
@@ -203,7 +218,7 @@ function dinding_lantai() {
   );
 
   let dash = 0;
-  
+
   // Garis Dinding
   for (let index = 0; index <= yLantai; index++) {
     if (dash < 80) {
@@ -216,7 +231,13 @@ function dinding_lantai() {
 
     if (index == yLantai) {
       garisDash(0, index - 10, xDinding_Kiri, index - 10, "biruTua");
-      garisDash(xDinding_Kanan, index - 10, CANVAS.width, index - 10, "biruTua");
+      garisDash(
+        xDinding_Kanan,
+        index - 10,
+        CANVAS.width,
+        index - 10,
+        "biruTua"
+      );
     }
   }
 
@@ -229,7 +250,7 @@ function dinding_lantai() {
 
 function gambarBola() {
   yLantai = CanvasMiddleY + (1 / 1.2) * CanvasMiddleY;
-  let xBola = jarakDindingInput + diameterBendaInput / 2 + 20;
+  let xBola = jarakDindingInput + diameterBendaInput / 2;
   let yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
 
   Lingkaran(xBola, yBola, diameterBendaInput / 2);
@@ -237,11 +258,36 @@ function gambarBola() {
 
 function refreshDraw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
-  requestAnimationFrame(gambarBola);
-  requestAnimationFrame(dinding_lantai);
+  gambarBola();
+  dinding_lantai();
+}
+
+/*
+Function for moving
+*/
+
+function jatuhkanBenda() {
+
+  let nextTinggi = Math.pow(koefisienRestitusiInput, 2) * tinggiBendaInput;
+
+  while (Math.round(nextTinggi) != 0) {
+    if (tinggiBendaInput > 0) {
+      while (tinggiBendaInput != 0) {
+        tinggiBendaID.value = tinggiBendaInput - 5;
+        tinggiBendaFunc();
+        window.requestAnimationFrame(refreshDraw);
+      }
+    }
+    nextTinggi = koefisienRestitusiInput ** 2 * nextTinggi;
+  }
 }
 
 /*
 Running
 */
-refreshDraw();
+function init () {
+  window.requestAnimationFrame(refreshDraw);
+  refresh_Text_Input();
+}
+
+window.onload = init;
