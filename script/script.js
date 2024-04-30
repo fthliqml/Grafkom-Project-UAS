@@ -26,7 +26,7 @@ let jarakDindingInput = Number(jarakDindingID.value);
 let tinggiBendaInput = Number(tinggiBendaID.value);
 let diameterBendaInput = Number(diameterBendaID.value);
 let koefisienRestitusiInput = Number(koefisienRestitusiID.value);
-let kecepatanBendaInput = Number(kecepatanBendaID.value);
+let kecepatanBendaInput = 0.1 * Number(kecepatanBendaID.value);
 let gayaBendaInput = Number(gayaBendaID.value);
 
 function refresh_Text_Input() {
@@ -62,12 +62,13 @@ diameterBendaID.addEventListener("input", () => {
 
 koefisienRestitusiID.addEventListener("input", () => {
   koefisienRestitusiInput = Number(koefisienRestitusiID.value);
+  countingHeight();
   refresh_Text_Input();
   refreshDraw();
 });
 
 kecepatanBendaID.addEventListener("input", () => {
-  kecepatanBendaInput = Number(kecepatanBendaID.value);
+  kecepatanBendaInput = 0.1 * Number(kecepatanBendaID.value);
   refresh_Text_Input();
   refreshDraw();
 });
@@ -265,28 +266,70 @@ function refreshDraw() {
 /*
 Function for moving
 */
+let goUp = false;
+const height = [];
 
-function jatuhkanBenda() {
+function countingHeight() {
+  height.length = 0;
+  let hNew;
+  let temp = tinggiBendaInput;
+  while (truncate(temp, 0) != 0) {
+    hNew = temp * koefisienRestitusiInput ** 2;
+    height.push(truncate(hNew, 0));
+    temp = hNew;
+  }
+}
 
-  let nextTinggi = Math.pow(koefisienRestitusiInput, 2) * tinggiBendaInput;
+function dropAnimation(timestamp) {
+  console.log(height);
 
-  while (Math.round(nextTinggi) != 0) {
-    if (tinggiBendaInput > 0) {
-      while (tinggiBendaInput != 0) {
-        tinggiBendaID.value = tinggiBendaInput - 5;
-        tinggiBendaFunc();
-        window.requestAnimationFrame(refreshDraw);
+  // Gagal 
+  for (let index = 0; index < height.length; index++) {
+    if (!goUp) {
+      tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
+      tinggiBendaFunc();
+      if (truncate(tinggiBendaInput, 0) == 0) {
+        goUp = true;
+      }
+    } else {
+      tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
+      tinggiBendaFunc();
+      if (truncate(tinggiBendaInput, 0 ) == height[index]) {
+        goUp = false;
       }
     }
-    nextTinggi = koefisienRestitusiInput ** 2 * nextTinggi;
   }
+  requestAnimationFrame(dropAnimation);
+}
+
+function downAnimation(timestamp) {
+  tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
+  tinggiBendaFunc();
+
+  requestAnimationFrame(downAnimation);
+}
+
+function upAnimation(timestamp) {
+  tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
+  tinggiBendaFunc();
+
+  requestAnimationFrame(upAnimation);
+}
+
+function jatuhkanBenda() {
+  countingHeight();
+  // requestAnimationFrame(dropAnimation);
+  requestAnimationFrame(downAnimation);
+
+  //
+  
 }
 
 /*
 Running
 */
-function init () {
-  window.requestAnimationFrame(refreshDraw);
+function init() {
+  refreshDraw();
   refresh_Text_Input();
 }
 

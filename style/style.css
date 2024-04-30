@@ -23,12 +23,12 @@ body {
 }
 
 #ukuranDasar {
-  bottom: 5px;
+  top: 5px;
   left: 5px;
 }
 
 #gerakBenda {
-  bottom: 50px;
+  top: 50px;
   right: 5px;
 }
 
