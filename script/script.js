@@ -197,7 +197,7 @@ function dinding_lantai() {
   // Initial Variable
   xDinding_Kiri = jarakDindingInput;
   xDinding_Kanan = CANVAS.width - jarakDindingInput;
-  yLantai = CanvasMiddleY + (1 / 1.2) * CanvasMiddleY;
+  yLantai = CanvasMiddleY * 1.993;
 
   // Dinding
   garisDDA(
@@ -250,7 +250,7 @@ function dinding_lantai() {
 }
 
 function gambarBola() {
-  yLantai = CanvasMiddleY + (1 / 1.2) * CanvasMiddleY;
+  yLantai = CanvasMiddleY * 1.993;
   let xBola = jarakDindingInput + diameterBendaInput / 2;
   let yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
 
@@ -273,53 +273,43 @@ function countingHeight() {
   height.length = 0;
   let hNew;
   let temp = tinggiBendaInput;
-  while (truncate(temp, 0) != 0) {
-    hNew = temp * koefisienRestitusiInput ** 2;
-    height.push(truncate(hNew, 0));
+  while (temp != 0) {
+    hNew = truncate(temp * koefisienRestitusiInput ** 2, 0);
+    height.push(hNew);
     temp = hNew;
   }
 }
 
 function dropAnimation(timestamp) {
-  console.log(height);
 
-  // Gagal 
-  for (let index = 0; index < height.length; index++) {
-    if (!goUp) {
-      tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
-      tinggiBendaFunc();
-      if (truncate(tinggiBendaInput, 0) == 0) {
-        goUp = true;
-      }
-    } else {
-      tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
-      tinggiBendaFunc();
-      if (truncate(tinggiBendaInput, 0 ) == height[index]) {
-        goUp = false;
-      }
+  if (!goUp) {
+    tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
+    tinggiBendaFunc();
+    if (tinggiBendaInput == 0) {
+      goUp = true;
+      cancelAnimationFrame(dropAnimation);
     }
+    if (height.length > 0) {
+      requestAnimationFrame(dropAnimation);
+    }
+  } else {
+    tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
+    tinggiBendaFunc();
+    if (tinggiBendaInput > height[0]) {
+      height.shift();
+      goUp = false;
+      cancelAnimationFrame(dropAnimation);
+    }
+    requestAnimationFrame(dropAnimation);
   }
-  requestAnimationFrame(dropAnimation);
-}
-
-function downAnimation(timestamp) {
-  tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
-  tinggiBendaFunc();
-
-  requestAnimationFrame(downAnimation);
-}
-
-function upAnimation(timestamp) {
-  tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
-  tinggiBendaFunc();
-
-  requestAnimationFrame(upAnimation);
+  console.log(height);
+  console.log(tinggiBendaInput);
 }
 
 function jatuhkanBenda() {
   countingHeight();
   // requestAnimationFrame(dropAnimation);
-  requestAnimationFrame(downAnimation);
+  window.requestAnimationFrame(dropAnimation);
 
   //
   
