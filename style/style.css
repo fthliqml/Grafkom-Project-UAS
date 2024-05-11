@@ -49,8 +49,12 @@ body {
   margin: 0px 20px;
 }
 
-.jatuhkanBenda {
-  align-self: center;
+.buttonAction {
+  align-self:center;
+}
+
+.buttonAction button{
+  margin: 0px 10px 10px 10px
 }
 
 .inputsContainer div input {

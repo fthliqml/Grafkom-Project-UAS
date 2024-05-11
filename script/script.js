@@ -50,6 +50,11 @@ function tinggiBendaFunc() {
   refreshDraw();
 }
 
+function translationFunc() {
+  refresh_Text_Input();
+  refreshDraw();
+}
+
 tinggiBendaID.addEventListener("input", () => {
   tinggiBendaFunc();
 });
@@ -192,6 +197,9 @@ Center Function
 let xDinding_Kiri;
 let xDinding_Kanan;
 let yLantai;
+let xBola;
+let yBola;
+let xMoveBola = 0;
 
 function dinding_lantai() {
   // Initial Variable
@@ -251,8 +259,8 @@ function dinding_lantai() {
 
 function gambarBola() {
   yLantai = CanvasMiddleY * 1.993;
-  let xBola = jarakDindingInput + diameterBendaInput / 2;
-  let yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
+  xBola = jarakDindingInput + diameterBendaInput / 2 + xMoveBola;
+  yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
 
   Lingkaran(xBola, yBola, diameterBendaInput / 2);
 }
@@ -267,6 +275,7 @@ function refreshDraw() {
 Function for moving
 */
 let goUp = false;
+let goLeft = false;
 const height = [];
 
 function countingHeight() {
@@ -281,13 +290,11 @@ function countingHeight() {
 }
 
 function dropAnimation(timestamp) {
-
   if (!goUp) {
     tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
     tinggiBendaFunc();
     if (tinggiBendaInput == 0) {
       goUp = true;
-      cancelAnimationFrame(dropAnimation);
     }
     if (height.length > 0) {
       requestAnimationFrame(dropAnimation);
@@ -298,21 +305,41 @@ function dropAnimation(timestamp) {
     if (tinggiBendaInput > height[0]) {
       height.shift();
       goUp = false;
-      cancelAnimationFrame(dropAnimation);
     }
     requestAnimationFrame(dropAnimation);
   }
-  console.log(height);
-  console.log(tinggiBendaInput);
 }
 
-function jatuhkanBenda() {
-  countingHeight();
-  // requestAnimationFrame(dropAnimation);
-  window.requestAnimationFrame(dropAnimation);
+function translationAnimation(timestamp) {
+  if (!goLeft) {
+    xMoveBola += kecepatanBendaInput;
+    translationFunc();
+    if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
+      requestAnimationFrame(translationAnimation);
+    } else {
+      goLeft = true;
+      requestAnimationFrame(translationAnimation);
+    }
+  } else {
+    console.log("jalankah");
+    xMoveBola -= kecepatanBendaInput;
+    translationFunc();
+    if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
+      requestAnimationFrame(translationAnimation);
+    } else {
+      goLeft = false;
+      requestAnimationFrame(translationAnimation);
+    }
+  }
+}
 
-  //
-  
+function jatuhBenda() {
+  countingHeight();
+  window.requestAnimationFrame(dropAnimation);
+}
+
+function translasiBenda() {
+  window.requestAnimationFrame(translationAnimation);
 }
 
 /*
