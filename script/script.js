@@ -26,7 +26,7 @@ let jarakDindingInput = Number(jarakDindingID.value);
 let tinggiBendaInput = Number(tinggiBendaID.value);
 let diameterBendaInput = Number(diameterBendaID.value);
 let koefisienRestitusiInput = Number(koefisienRestitusiID.value);
-let kecepatanBendaInput = 0.1 * Number(kecepatanBendaID.value);
+let kecepatanBendaInput = Number(kecepatanBendaID.value);
 let gayaBendaInput = Number(gayaBendaID.value);
 
 function refresh_Text_Input() {
@@ -48,6 +48,11 @@ function tinggiBendaFunc() {
   tinggiBendaInput = Number(tinggiBendaID.value);
   refresh_Text_Input();
   refreshDraw();
+}
+
+function refreshVelocity() {
+  kecepatanBendaInput = Number(kecepatanBendaID.value);
+  refresh_Text_Input;
 }
 
 function translationFunc() {
@@ -73,7 +78,7 @@ koefisienRestitusiID.addEventListener("input", () => {
 });
 
 kecepatanBendaID.addEventListener("input", () => {
-  kecepatanBendaInput = 0.1 * Number(kecepatanBendaID.value);
+  kecepatanBendaInput = Number(kecepatanBendaID.value);
   refresh_Text_Input();
   refreshDraw();
 });
@@ -280,6 +285,7 @@ const height = [];
 
 function countingHeight() {
   height.length = 0;
+  height.push(tinggiBendaInput);
   let hNew;
   let temp = tinggiBendaInput;
   while (temp != 0) {
@@ -291,10 +297,16 @@ function countingHeight() {
 
 function dropAnimation(timestamp) {
   if (!goUp) {
+    let _vAkhir;
+    kecepatanBendaID.value = kecepatanBendaInput + 1;
+    refreshVelocity();
     tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
     tinggiBendaFunc();
-    if (tinggiBendaInput == 0) {
+    if (tinggiBendaInput - 1 <= 0) {
       goUp = true;
+      _vAkhir = Math.sqrt(2 * height[0]);
+      kecepatanBendaID.value = _vAkhir;
+      refreshVelocity();
     }
     if (height.length > 0) {
       requestAnimationFrame(dropAnimation);
@@ -302,9 +314,11 @@ function dropAnimation(timestamp) {
   } else {
     tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
     tinggiBendaFunc();
-    if (tinggiBendaInput > height[0]) {
+    if (tinggiBendaInput > height[1]) {
       height.shift();
       goUp = false;
+      // kecepatanBendaID.value = 0;
+      // refreshVelocity();
     }
     requestAnimationFrame(dropAnimation);
   }
@@ -321,7 +335,6 @@ function translationAnimation(timestamp) {
       requestAnimationFrame(translationAnimation);
     }
   } else {
-    console.log("jalankah");
     xMoveBola -= kecepatanBendaInput;
     translationFunc();
     if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
@@ -335,6 +348,8 @@ function translationAnimation(timestamp) {
 
 function jatuhBenda() {
   countingHeight();
+  kecepatanBendaID.value = 0;
+  refreshVelocity();
   window.requestAnimationFrame(dropAnimation);
 }
 
