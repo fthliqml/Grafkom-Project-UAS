@@ -285,19 +285,22 @@ const height = [];
 
 function countingHeight() {
   height.length = 0;
-  height.push(tinggiBendaInput);
   let hNew;
   let temp = tinggiBendaInput;
-  while (temp != 0) {
-    hNew = truncate(temp * koefisienRestitusiInput ** 2, 0);
-    height.push(hNew);
-    temp = hNew;
+  if (koefisienRestitusiInput < 1) {
+    while (temp != 0) {
+      hNew = truncate(temp * koefisienRestitusiInput ** 2, 0);
+      height.push(hNew);
+      temp = hNew;
+    }
+  } else {
+    height.push(tinggiBendaInput);
   }
 }
 
 function dropAnimation(timestamp) {
+  let _vAkhir;
   if (!goUp) {
-    let _vAkhir;
     kecepatanBendaID.value = kecepatanBendaInput + 1;
     refreshVelocity();
     tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
@@ -307,18 +310,20 @@ function dropAnimation(timestamp) {
       _vAkhir = Math.sqrt(2 * height[0]);
       kecepatanBendaID.value = _vAkhir;
       refreshVelocity();
+      if (koefisienRestitusiInput < 1) {
+        height.shift(); 
+      }
     }
     if (height.length > 0) {
       requestAnimationFrame(dropAnimation);
     }
   } else {
+    kecepatanBendaID.value = kecepatanBendaInput - 1;
+    refreshVelocity();
     tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
     tinggiBendaFunc();
-    if (tinggiBendaInput > height[1]) {
-      height.shift();
+    if (kecepatanBendaInput == 0) {
       goUp = false;
-      // kecepatanBendaID.value = 0;
-      // refreshVelocity();
     }
     requestAnimationFrame(dropAnimation);
   }
@@ -348,6 +353,7 @@ function translationAnimation(timestamp) {
 
 function jatuhBenda() {
   countingHeight();
+  console.log(height);
   kecepatanBendaID.value = 0;
   refreshVelocity();
   window.requestAnimationFrame(dropAnimation);
