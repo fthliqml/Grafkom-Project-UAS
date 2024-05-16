@@ -186,11 +186,19 @@ function truncate(num, places) {
 }
 
 function Lingkaran(xc, yc, radius, theta = 0, maxTheta = Math.PI * 2) {
+  // garisDash(xc, yc, xc + radius, yc, "merah");
+  // garisDash(xc, yc, xc - radius, yc, "merah");
+  // garisDash(xc, yc, xc, yc - radius, "merah");
+  // garisDash(xc, yc, xc, yc + radius, "merah");
   while (truncate(theta, 3) <= maxTheta) {
     let xi = xc + radius * Math.cos(theta);
     let yi = yc + radius * Math.sin(theta);
     drawPixel(xi, yi, "black");
-    theta += 0.003;
+    // if (truncate(theta, 3) == 0.785 || truncate(theta, 3) == 2.355 || truncate(theta, 3) == 3.925 || truncate(theta, 3) == 5.495) {
+    //   console.log(theta);
+    //   garisDDA(xc, yc, xi, yi, "abuTua");
+    // }
+    theta += 0.001;
   }
 }
 
@@ -205,6 +213,7 @@ let yLantai;
 let xBola;
 let yBola;
 let xMoveBola = 0;
+let thetaStart = 0.785;
 
 function dinding_lantai() {
   // Initial Variable
@@ -262,6 +271,22 @@ function dinding_lantai() {
   }
 }
 
+function garisBola(thetaStart) {
+  let thetaNow = thetaStart;
+  xBola = jarakDindingInput + diameterBendaInput / 2 + xMoveBola;
+  yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
+  // kanan atas
+  garisDDA(xBola, yBola, xBola + diameterBendaInput / 2 * Math.cos(thetaStart), yBola + diameterBendaInput / 2 * Math.sin(thetaStart), "abuTua");
+  while (thetaNow < thetaStart + 6.28) {
+    thetaNow = thetaNow + (thetaStart * 2);
+    console.log(thetaNow);
+    garisDDA(xBola, yBola, xBola + diameterBendaInput / 2 * Math.cos(thetaNow), yBola + diameterBendaInput / 2 * Math.sin(thetaNow), "abuTua");
+  }
+  // kanan bawah
+  // kiri bawah
+  // kiri atas
+}
+
 function gambarBola() {
   yLantai = CanvasMiddleY * 1.993;
   xBola = jarakDindingInput + diameterBendaInput / 2 + xMoveBola;
@@ -272,6 +297,7 @@ function gambarBola() {
 
 function refreshDraw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  garisBola(thetaStart);
   gambarBola();
   dinding_lantai();
 }
@@ -311,7 +337,7 @@ function dropAnimation(timestamp) {
       kecepatanBendaID.value = _vAkhir;
       refreshVelocity();
       if (koefisienRestitusiInput < 1) {
-        height.shift(); 
+        height.shift();
       }
     }
     if (height.length > 0) {
@@ -334,6 +360,7 @@ function translationAnimation(timestamp) {
     xMoveBola += kecepatanBendaInput;
     translationFunc();
     if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
+      thetaStart += kecepatanBendaInput / (diameterBendaInput / 2);
       requestAnimationFrame(translationAnimation);
     } else {
       goLeft = true;
@@ -343,6 +370,7 @@ function translationAnimation(timestamp) {
     xMoveBola -= kecepatanBendaInput;
     translationFunc();
     if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
+      thetaStart -= kecepatanBendaInput / (diameterBendaInput / 2);
       requestAnimationFrame(translationAnimation);
     } else {
       goLeft = false;
