@@ -23,12 +23,12 @@ body {
 }
 
 #ukuranDasar {
-  bottom: 5px;
+  top: 5px;
   left: 5px;
 }
 
 #gerakBenda {
-  bottom: 50px;
+  top: 50px;
   right: 5px;
 }
 
@@ -47,6 +47,14 @@ body {
   justify-items: center;
   align-items: center;
   margin: 0px 20px;
+}
+
+.buttonAction {
+  align-self:center;
+}
+
+.buttonAction button{
+  margin: 0px 10px 10px 10px
 }
 
 .inputsContainer div input {

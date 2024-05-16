@@ -7,6 +7,7 @@ let CanvasMiddleY = CANVAS.height / 2;
 const jarakDindingID = document.getElementById("jarakDinding");
 const tinggiBendaID = document.getElementById("tinggiBenda");
 const diameterBendaID = document.getElementById("diameterBenda");
+const koefisienRestitusiID = document.getElementById("koefisienRestitusi");
 const kecepatanBendaID = document.getElementById("kecepatanBenda");
 const gayaBendaID = document.getElementById("gayaBenda");
 
@@ -14,6 +15,9 @@ const gayaBendaID = document.getElementById("gayaBenda");
 let jarakDindingValText = document.getElementById("jarakDindingValue");
 let tinggiBendaValText = document.getElementById("tinggiBendaValue");
 let diameterBendaValText = document.getElementById("diameterBendaValue");
+let koefisienRestitusiValText = document.getElementById(
+  "koefisienRestitusiValue"
+);
 let kecepatanBendaValText = document.getElementById("kecepatanBendaValue");
 let gayaBendaValText = document.getElementById("gayaBendaValue");
 
@@ -21,6 +25,7 @@ let gayaBendaValText = document.getElementById("gayaBendaValue");
 let jarakDindingInput = Number(jarakDindingID.value);
 let tinggiBendaInput = Number(tinggiBendaID.value);
 let diameterBendaInput = Number(diameterBendaID.value);
+let koefisienRestitusiInput = Number(koefisienRestitusiID.value);
 let kecepatanBendaInput = Number(kecepatanBendaID.value);
 let gayaBendaInput = Number(gayaBendaID.value);
 
@@ -28,10 +33,10 @@ function refresh_Text_Input() {
   jarakDindingValText.textContent = jarakDindingID.value;
   tinggiBendaValText.textContent = tinggiBendaID.value;
   diameterBendaValText.textContent = diameterBendaID.value;
+  koefisienRestitusiValText.textContent = koefisienRestitusiID.value;
   kecepatanBendaValText.textContent = kecepatanBendaID.value;
   gayaBendaValText.textContent = gayaBendaID.value;
 }
-refresh_Text_Input();
 
 jarakDindingID.addEventListener("input", () => {
   jarakDindingInput = Number(jarakDindingID.value);
@@ -39,14 +44,35 @@ jarakDindingID.addEventListener("input", () => {
   refreshDraw();
 });
 
-tinggiBendaID.addEventListener("input", () => {
+function tinggiBendaFunc() {
   tinggiBendaInput = Number(tinggiBendaID.value);
   refresh_Text_Input();
   refreshDraw();
+}
+
+function refreshVelocity() {
+  kecepatanBendaInput = Number(kecepatanBendaID.value);
+  refresh_Text_Input;
+}
+
+function translationFunc() {
+  refresh_Text_Input();
+  refreshDraw();
+}
+
+tinggiBendaID.addEventListener("input", () => {
+  tinggiBendaFunc();
 });
 
 diameterBendaID.addEventListener("input", () => {
   diameterBendaInput = Number(diameterBendaID.value);
+  refresh_Text_Input();
+  refreshDraw();
+});
+
+koefisienRestitusiID.addEventListener("input", () => {
+  koefisienRestitusiInput = Number(koefisienRestitusiID.value);
+  countingHeight();
   refresh_Text_Input();
   refreshDraw();
 });
@@ -176,12 +202,15 @@ Center Function
 let xDinding_Kiri;
 let xDinding_Kanan;
 let yLantai;
+let xBola;
+let yBola;
+let xMoveBola = 0;
 
 function dinding_lantai() {
   // Initial Variable
   xDinding_Kiri = jarakDindingInput;
   xDinding_Kanan = CANVAS.width - jarakDindingInput;
-  yLantai = CanvasMiddleY + (1 / 1.2) * CanvasMiddleY;
+  yLantai = CanvasMiddleY * 1.993;
 
   // Dinding
   garisDDA(
@@ -203,7 +232,7 @@ function dinding_lantai() {
   );
 
   let dash = 0;
-  
+
   // Garis Dinding
   for (let index = 0; index <= yLantai; index++) {
     if (dash < 80) {
@@ -216,7 +245,13 @@ function dinding_lantai() {
 
     if (index == yLantai) {
       garisDash(0, index - 10, xDinding_Kiri, index - 10, "biruTua");
-      garisDash(xDinding_Kanan, index - 10, CANVAS.width, index - 10, "biruTua");
+      garisDash(
+        xDinding_Kanan,
+        index - 10,
+        CANVAS.width,
+        index - 10,
+        "biruTua"
+      );
     }
   }
 
@@ -228,20 +263,106 @@ function dinding_lantai() {
 }
 
 function gambarBola() {
-  yLantai = CanvasMiddleY + (1 / 1.2) * CanvasMiddleY;
-  let xBola = jarakDindingInput + diameterBendaInput / 2 + 20;
-  let yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
+  yLantai = CanvasMiddleY * 1.993;
+  xBola = jarakDindingInput + diameterBendaInput / 2 + xMoveBola;
+  yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
 
   Lingkaran(xBola, yBola, diameterBendaInput / 2);
 }
 
 function refreshDraw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
-  requestAnimationFrame(gambarBola);
-  requestAnimationFrame(dinding_lantai);
+  gambarBola();
+  dinding_lantai();
+}
+
+/*
+Function for moving
+*/
+let goUp = false;
+let goLeft = false;
+const height = [];
+
+function countingHeight() {
+  height.length = 0;
+  height.push(tinggiBendaInput);
+  let hNew;
+  let temp = tinggiBendaInput;
+  while (temp != 0) {
+    hNew = truncate(temp * koefisienRestitusiInput ** 2, 0);
+    height.push(hNew);
+    temp = hNew;
+  }
+}
+
+function dropAnimation(timestamp) {
+  if (!goUp) {
+    let _vAkhir;
+    kecepatanBendaID.value = kecepatanBendaInput + 1;
+    refreshVelocity();
+    tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
+    tinggiBendaFunc();
+    if (tinggiBendaInput - 1 <= 0) {
+      goUp = true;
+      _vAkhir = Math.sqrt(2 * height[0]);
+      kecepatanBendaID.value = _vAkhir;
+      refreshVelocity();
+    }
+    if (height.length > 0) {
+      requestAnimationFrame(dropAnimation);
+    }
+  } else {
+    tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
+    tinggiBendaFunc();
+    if (tinggiBendaInput > height[1]) {
+      height.shift();
+      goUp = false;
+      // kecepatanBendaID.value = 0;
+      // refreshVelocity();
+    }
+    requestAnimationFrame(dropAnimation);
+  }
+}
+
+function translationAnimation(timestamp) {
+  if (!goLeft) {
+    xMoveBola += kecepatanBendaInput;
+    translationFunc();
+    if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
+      requestAnimationFrame(translationAnimation);
+    } else {
+      goLeft = true;
+      requestAnimationFrame(translationAnimation);
+    }
+  } else {
+    xMoveBola -= kecepatanBendaInput;
+    translationFunc();
+    if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
+      requestAnimationFrame(translationAnimation);
+    } else {
+      goLeft = false;
+      requestAnimationFrame(translationAnimation);
+    }
+  }
+}
+
+function jatuhBenda() {
+  countingHeight();
+  kecepatanBendaID.value = 0;
+  refreshVelocity();
+  window.requestAnimationFrame(dropAnimation);
+}
+
+function translasiBenda() {
+  window.requestAnimationFrame(translationAnimation);
 }
 
 /*
 Running
 */
-refreshDraw();
+function init() {
+  refreshDraw();
+  refresh_Text_Input();
+}
+
+window.onload = init;
