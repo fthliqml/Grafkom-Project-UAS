@@ -30,6 +30,7 @@
             id="tinggiBenda"
             min="0"
             max="2500"
+            value="900"
           />
           <p id="tinggiBendaValue"></p>
         </div>
@@ -58,7 +59,8 @@
         </div>
         <div class="buttonAction">
           <button onclick="jatuhBenda()">Jatuh</button>
-          <button onclick="translasiBenda()">Translasi</button>
+          <button onclick="GLB()">GLB</button>
+          <button onclick="GLBB()">GLBB</button>
         </div>
       </div>
     </div>
@@ -84,15 +86,28 @@
             type="range"
             name="gayaBenda"
             id="gayaBenda"
-            min="50"
+            min="0"
             max="500"
+            value="50"
           />
           <p id="gayaBendaValue"></p>
+        </div>
+        <div class="gayaGesek">
+          <label for="gayaGesek">Gaya Gesek</label>
+          <input
+            type="range"
+            name="gayaGesek"
+            id="gayaGesek"
+            min="0"
+            max="10"
+            step="1"
+          />
+          <p id="gayaGesekValue"></p>
         </div>
       </div>
     </div>
 
-    <canvas id="myCanvas" height="1500" width="3000"></canvas>
+    <canvas id="myCanvas" height="1750" width="3500"></canvas>
 
     <script src="/script/script.js"></script>
   </body>
