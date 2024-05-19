@@ -12,24 +12,88 @@ body {
   width: 100%;
 }
 
-.inputs {
+.main {
+  position: absolute;
+  right: 0;
+  top: 0;
   display: flex;
+  flex-direction: row-reverse;
+  align-items: baseline;
+}
+
+.maintoggle button {
+  -webkit-box-shadow: 10px 3px 23px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 10px 3px 23px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px 3px 23px 0px rgba(0, 0, 0, 0.75);
+  font-size: 30px;
+  padding: 10px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(46, 56, 64);
+  color: azure;
+}
+
+.inputs {
+  display: none;
   padding: 0px;
   color: azure;
   justify-content: center;
-  position: absolute;
-  background: rgba(46, 56, 64);
   border-radius: 16px;
+  width: 400px;
+  height: 250px;
 }
 
+.inputs.active {
+  display: flex;
+}
+
+.toggleContainer button {
+  color: azure;
+  background: transparent;
+  border-radius: 10px;
+  border-color: azure;
+  padding: 5px;
+}
+
+.inputMenus {
+  background: rgba(46, 56, 64);
+  border-radius: 20px;
+  padding: 10px;
+  width: 300px;
+  height: 250px;
+  position: fixed;
+  top: 0;
+  right: -300px; 
+  transition: right 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+}
+
+.inputMenus.visible {
+  right: 100px; 
+  opacity: 1;
+}
+
+.inputMenus.hidden {
+  right: -300px; 
+  opacity: 0;
+}
 #ukuranDasar {
-  top: 5px;
-  left: 5px;
+  position: relative;
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.kontainer {
+  display: flex;
 }
 
 #gerakBenda {
-  top: 50px;
-  right: 5px;
+  position: relative;
 }
 
 .inputsContainer {
@@ -50,11 +114,11 @@ body {
 }
 
 .buttonAction {
-  align-self:center;
+  align-self: center;
 }
 
-.buttonAction button{
-  margin: 0px 10px 10px 10px
+.buttonAction button {
+  margin: 0px 10px 10px 10px;
 }
 
 .inputsContainer div input {
