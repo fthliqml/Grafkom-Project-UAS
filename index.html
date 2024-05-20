@@ -8,101 +8,116 @@
   </head>
 
   <body>
-    <div class="inputs" id="ukuranDasar">
-      <div class="inputsContainer" id="inputsContainer">
-        <p>Ukuran Dasar</p>
-        <div class="jarakDinding">
-          <label for="jarakDinding">Jarak Dinding</label>
-          <input
-            type="range"
-            name="jarakDinding"
-            id="jarakDinding"
-            min="0"
-            max="1000"
-          />
-          <p id="jarakDindingValue"></p>
-        </div>
-        <div class="tinggiBenda">
-          <label for="tinggiBenda">Tinggi Benda</label>
-          <input
-            type="range"
-            name="tinggiBenda"
-            id="tinggiBenda"
-            min="0"
-            max="2500"
-            value="900"
-          />
-          <p id="tinggiBendaValue"></p>
-        </div>
-        <div class="diameterBenda">
-          <label for="diameterBenda">Diameter Benda</label>
-          <input
-            type="range"
-            name="diameterBenda"
-            id="diameterBenda"
-            min="100"
-            max="300"
-          />
-          <p id="diameterBendaValue"></p>
-        </div>
-        <div class="koefisienRestitusi">
-          <label for="koefisienRestitusi">Koefisien Restitusi (e)</label>
-          <input
-            type="range"
-            name="koefisienRestitusi"
-            id="koefisienRestitusi"
-            min="0"
-            max="1"
-            step="0.1"
-          />
-          <p id="koefisienRestitusiValue"></p>
-        </div>
-        <div class="buttonAction">
-          <button onclick="jatuhBenda()">Jatuh</button>
-          <button onclick="GLB()">GLB</button>
-          <button onclick="GLBB()">GLBB</button>
-        </div>
+    <div class="main">
+      <div class="maintoggle">
+        <button onclick="toggleMain()">=</button>
       </div>
-    </div>
-
-    <div class="inputs" id="gerakBenda">
-      <div class="inputsContainer" id="inputsContainer">
-        <p>Gerak Benda</p>
-        <div class="kecepatanBenda">
-          <label for="kecepatanBenda">Kecepatan Benda</label>
-          <input
-            type="range"
-            name="kecepatanBenda"
-            id="kecepatanBenda"
-            min="0"
-            max="500"
-            step="1"
-          />
-          <p id="kecepatanBendaValue"></p>
+      <div class="inputMenus" id="inputMenus">
+        <div class="toggleContainer">
+          <button id="toggleUkuranDasar" onclick="toggleUkuranDasar()">
+            Ukuran Dasar
+          </button>
+          <button id="toggleKecepatanBenda" onclick="toggleKecepatanBenda()">
+            Kecepatan Benda
+          </button>
         </div>
-        <div class="gayaBenda">
-          <label for="gayaBenda">Gaya Benda</label>
-          <input
-            type="range"
-            name="gayaBenda"
-            id="gayaBenda"
-            min="0"
-            max="500"
-            value="50"
-          />
-          <p id="gayaBendaValue"></p>
-        </div>
-        <div class="gayaGesek">
-          <label for="gayaGesek">Gaya Gesek</label>
-          <input
-            type="range"
-            name="gayaGesek"
-            id="gayaGesek"
-            min="0"
-            max="10"
-            step="1"
-          />
-          <p id="gayaGesekValue"></p>
+        <div class="kontainer">
+          <div class="inputs active" id="ukuranDasar">
+            <div class="inputsContainer">
+              <div class="jarakDinding">
+                <label for="jarakDinding">Jarak Dinding</label>
+                <input
+                  type="range"
+                  name="jarakDinding"
+                  id="jarakDinding"
+                  min="0"
+                  max="1000"
+                  value="150"
+                />
+                <p id="jarakDindingValue"></p>
+              </div>
+              <div class="tinggiBenda">
+                <label for="tinggiBenda">Tinggi Benda</label>
+                <input
+                  type="range"
+                  name="tinggiBenda"
+                  id="tinggiBenda"
+                  min="0"
+                  max="2500"
+                  value="900"
+                />
+                <p id="tinggiBendaValue"></p>
+              </div>
+              <div class="diameterBenda">
+                <label for="diameterBenda">Diameter Benda</label>
+                <input
+                  type="range"
+                  name="diameterBenda"
+                  id="diameterBenda"
+                  min="100"
+                  max="300"
+                />
+                <p id="diameterBendaValue"></p>
+              </div>
+              <div class="koefisienRestitusi">
+                <label for="koefisienRestitusi">Koefisien Restitusi (e)</label>
+                <input
+                  type="range"
+                  name="koefisienRestitusi"
+                  id="koefisienRestitusi"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                />
+                <p id="koefisienRestitusiValue"></p>
+              </div>
+              <div class="buttonAction">
+                <button onclick="jatuhBenda()">Jatuh</button>
+                <button onclick="GLB()">GLB</button>
+                <button onclick="GLBB()">GLBB</button>
+              </div>
+            </div>
+          </div>
+          <div class="inputs" id="gerakBenda">
+            <div class="inputsContainer">
+              <div class="kecepatanBenda">
+                <label for="kecepatanBenda">Kecepatan Benda</label>
+                <input
+                  type="range"
+                  name="kecepatanBenda"
+                  id="kecepatanBenda"
+                  min="0"
+                  max="500"
+                  step="1"
+                />
+                <p id="kecepatanBendaValue"></p>
+              </div>
+              <div class="gayaBenda">
+                <label for="gayaBenda">Gaya Benda</label>
+                <input
+                  type="range"
+                  name="gayaBenda"
+                  id="gayaBenda"
+                  min="50"
+                  max="500"
+                  value="50"
+                />
+                <p id="gayaBendaValue"></p>
+              </div>
+              <div class="gayaGesek">
+                <label for="gayaGesek">Gaya Gesek</label>
+                <input
+                  type="range"
+                  name="gayaGesek"
+                  id="gayaGesek"
+                  min="0"
+                  max="10"
+                  step="1"
+                />
+                <p id="gayaGesekValue"></p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -110,5 +125,6 @@
     <canvas id="myCanvas" height="1750" width="3500"></canvas>
 
     <script src="/script/script.js"></script>
+    <script src="/script/ui.js"></script>
   </body>
 </html>
