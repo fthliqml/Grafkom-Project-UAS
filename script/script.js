@@ -10,6 +10,7 @@ const diameterBendaID = document.getElementById("diameterBenda");
 const koefisienRestitusiID = document.getElementById("koefisienRestitusi");
 const kecepatanBendaID = document.getElementById("kecepatanBenda");
 const gayaBendaID = document.getElementById("gayaBenda");
+const gayaGesekID = document.getElementById("gayaGesek");
 
 // Get Text Value
 let jarakDindingValText = document.getElementById("jarakDindingValue");
@@ -20,6 +21,7 @@ let koefisienRestitusiValText = document.getElementById(
 );
 let kecepatanBendaValText = document.getElementById("kecepatanBendaValue");
 let gayaBendaValText = document.getElementById("gayaBendaValue");
+let gayaGesekValText = document.getElementById("gayaGesekValue");
 
 // Get User Input
 let jarakDindingInput = Number(jarakDindingID.value);
@@ -28,6 +30,7 @@ let diameterBendaInput = Number(diameterBendaID.value);
 let koefisienRestitusiInput = Number(koefisienRestitusiID.value);
 let kecepatanBendaInput = Number(kecepatanBendaID.value);
 let gayaBendaInput = Number(gayaBendaID.value);
+let gayaGesekInput = Number(gayaGesekID.value);
 
 function refresh_Text_Input() {
   jarakDindingValText.textContent = jarakDindingID.value;
@@ -36,6 +39,7 @@ function refresh_Text_Input() {
   koefisienRestitusiValText.textContent = koefisienRestitusiID.value;
   kecepatanBendaValText.textContent = kecepatanBendaID.value;
   gayaBendaValText.textContent = gayaBendaID.value;
+  gayaGesekValText.textContent = gayaGesekID.value;
 }
 
 jarakDindingID.addEventListener("input", () => {
@@ -55,7 +59,7 @@ function refreshVelocity() {
   refresh_Text_Input;
 }
 
-function translationFunc() {
+function allRefresh() {
   refresh_Text_Input();
   refreshDraw();
 }
@@ -85,6 +89,14 @@ kecepatanBendaID.addEventListener("input", () => {
 
 gayaBendaID.addEventListener("input", () => {
   gayaBendaInput = Number(gayaBendaID.value);
+  velocityNowGLBB = gayaBendaInput;
+  refresh_Text_Input();
+  refreshDraw();
+});
+
+gayaGesekID.addEventListener("input", () => {
+  gayaGesekInput = Number(gayaGesekID.value);
+  velocityNowGLBB = gayaBendaInput;
   refresh_Text_Input();
   refreshDraw();
 });
@@ -186,11 +198,19 @@ function truncate(num, places) {
 }
 
 function Lingkaran(xc, yc, radius, theta = 0, maxTheta = Math.PI * 2) {
+  // garisDash(xc, yc, xc + radius, yc, "merah");
+  // garisDash(xc, yc, xc - radius, yc, "merah");
+  // garisDash(xc, yc, xc, yc - radius, "merah");
+  // garisDash(xc, yc, xc, yc + radius, "merah");
   while (truncate(theta, 3) <= maxTheta) {
     let xi = xc + radius * Math.cos(theta);
     let yi = yc + radius * Math.sin(theta);
     drawPixel(xi, yi, "black");
-    theta += 0.003;
+    // if (truncate(theta, 3) == 0.785 || truncate(theta, 3) == 2.355 || truncate(theta, 3) == 3.925 || truncate(theta, 3) == 5.495) {
+    //   console.log(theta);
+    //   garisDDA(xc, yc, xi, yi, "abuTua");
+    // }
+    theta += 0.001;
   }
 }
 
@@ -205,6 +225,7 @@ let yLantai;
 let xBola;
 let yBola;
 let xMoveBola = 0;
+let thetaStart = 45;
 
 function dinding_lantai() {
   // Initial Variable
@@ -262,6 +283,30 @@ function dinding_lantai() {
   }
 }
 
+function garisBola(thetaStart) {
+  let thetaNow = thetaStart;
+  xBola = jarakDindingInput + diameterBendaInput / 2 + xMoveBola;
+  yBola = yLantai - diameterBendaInput / 2 - tinggiBendaInput;
+
+  garisDDA(
+    xBola,
+    yBola,
+    xBola + (diameterBendaInput / 2) * Math.cos((thetaStart * Math.PI) / 180),
+    yBola + (diameterBendaInput / 2) * Math.sin((thetaStart * Math.PI) / 180),
+    "merah"
+  );
+  for (let index = 0; index < 3; index++) {
+    thetaNow += 90;
+    garisDDA(
+      xBola,
+      yBola,
+      xBola + (diameterBendaInput / 2) * Math.cos((thetaNow * Math.PI) / 180),
+      yBola + (diameterBendaInput / 2) * Math.sin((thetaNow * Math.PI) / 180),
+      "merah"
+    );
+  }
+}
+
 function gambarBola() {
   yLantai = CanvasMiddleY * 1.993;
   xBola = jarakDindingInput + diameterBendaInput / 2 + xMoveBola;
@@ -272,6 +317,7 @@ function gambarBola() {
 
 function refreshDraw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  garisBola(thetaStart);
   gambarBola();
   dinding_lantai();
 }
@@ -285,19 +331,22 @@ const height = [];
 
 function countingHeight() {
   height.length = 0;
-  height.push(tinggiBendaInput);
   let hNew;
   let temp = tinggiBendaInput;
-  while (temp != 0) {
-    hNew = truncate(temp * koefisienRestitusiInput ** 2, 0);
-    height.push(hNew);
-    temp = hNew;
+  if (koefisienRestitusiInput < 1) {
+    while (temp != 0) {
+      hNew = truncate(temp * koefisienRestitusiInput ** 2, 0);
+      height.push(hNew);
+      temp = hNew;
+    }
+  } else {
+    height.push(tinggiBendaInput);
   }
 }
 
 function dropAnimation(timestamp) {
+  let _vAkhir;
   if (!goUp) {
-    let _vAkhir;
     kecepatanBendaID.value = kecepatanBendaInput + 1;
     refreshVelocity();
     tinggiBendaID.value = tinggiBendaInput - kecepatanBendaInput;
@@ -307,54 +356,107 @@ function dropAnimation(timestamp) {
       _vAkhir = Math.sqrt(2 * height[0]);
       kecepatanBendaID.value = _vAkhir;
       refreshVelocity();
+      if (koefisienRestitusiInput < 1) {
+        height.shift();
+      }
     }
     if (height.length > 0) {
       requestAnimationFrame(dropAnimation);
     }
   } else {
+    kecepatanBendaID.value = kecepatanBendaInput - 1;
+    refreshVelocity();
     tinggiBendaID.value = tinggiBendaInput + kecepatanBendaInput;
     tinggiBendaFunc();
-    if (tinggiBendaInput > height[1]) {
-      height.shift();
+    if (kecepatanBendaInput == 0) {
       goUp = false;
-      // kecepatanBendaID.value = 0;
-      // refreshVelocity();
     }
     requestAnimationFrame(dropAnimation);
   }
 }
 
-function translationAnimation(timestamp) {
+function GLBAnimation(timestamp) {
   if (!goLeft) {
     xMoveBola += kecepatanBendaInput;
-    translationFunc();
+    allRefresh();
     if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
-      requestAnimationFrame(translationAnimation);
+      thetaStart +=
+        (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) * Math.PI) /
+        180;
+      requestAnimationFrame(GLBAnimation);
     } else {
       goLeft = true;
-      requestAnimationFrame(translationAnimation);
+      requestAnimationFrame(GLBAnimation);
     }
   } else {
     xMoveBola -= kecepatanBendaInput;
-    translationFunc();
+    allRefresh();
     if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
-      requestAnimationFrame(translationAnimation);
+      thetaStart -=
+        (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) * Math.PI) /
+        180;
+      requestAnimationFrame(GLBAnimation);
     } else {
       goLeft = false;
-      requestAnimationFrame(translationAnimation);
+      requestAnimationFrame(GLBAnimation);
+    }
+  }
+}
+
+let velocityNowGLBB = gayaBendaInput;
+
+function GLBBAnimation(timestamp) {
+  if (!goLeft) {
+    xMoveBola += velocityNowGLBB;
+    velocityNowGLBB -= gayaGesekInput / 10;
+    kecepatanBendaID.value = velocityNowGLBB;
+    refreshVelocity();
+    allRefresh();
+    if (velocityNowGLBB > 0) {
+      if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
+        thetaStart +=
+          (((velocityNowGLBB * 1100) / (diameterBendaInput / 2)) * Math.PI) /
+          180;
+        requestAnimationFrame(GLBBAnimation);
+      } else {
+        goLeft = true;
+        requestAnimationFrame(GLBBAnimation);
+      }
+    }
+  } else {
+    xMoveBola -= velocityNowGLBB;
+    velocityNowGLBB -= gayaGesekInput / 10;
+    kecepatanBendaID.value = velocityNowGLBB;
+    refreshVelocity();
+    allRefresh();
+    if (velocityNowGLBB > 0) {
+      if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
+        thetaStart -=
+          (((velocityNowGLBB * 1100) / (diameterBendaInput / 2)) * Math.PI) /
+          180;
+        requestAnimationFrame(GLBBAnimation);
+      } else {
+        goLeft = false;
+        requestAnimationFrame(GLBBAnimation);
+      }
     }
   }
 }
 
 function jatuhBenda() {
   countingHeight();
+  console.log(height);
   kecepatanBendaID.value = 0;
   refreshVelocity();
   window.requestAnimationFrame(dropAnimation);
 }
 
-function translasiBenda() {
-  window.requestAnimationFrame(translationAnimation);
+function GLB() {
+  window.requestAnimationFrame(GLBAnimation);
+}
+
+function GLBB() {
+  window.requestAnimationFrame(GLBBAnimation);
 }
 
 /*
@@ -365,4 +467,5 @@ function init() {
   refresh_Text_Input();
 }
 
+init();
 window.onload = init;

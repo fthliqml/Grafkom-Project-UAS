@@ -60,11 +60,11 @@ body {
   background: rgba(46, 56, 64);
   border-radius: 20px;
   padding: 10px;
-  width: 300px;
-  height: 250px;
+  width: 380px;
+  height: 220px;
   position: fixed;
   top: 0;
-  right: -300px; 
+  right: -380px; 
   transition: right 0.5s ease, opacity 0.5s ease;
   opacity: 0;
 }
@@ -72,10 +72,12 @@ body {
 .inputMenus.visible {
   right: 100px; 
   opacity: 1;
+  width: 380px;
+  height: 220px;
 }
 
 .inputMenus.hidden {
-  right: -300px; 
+  right: -380px; 
   opacity: 0;
 }
 #ukuranDasar {

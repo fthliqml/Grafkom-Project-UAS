@@ -24,7 +24,6 @@
         <div class="kontainer">
           <div class="inputs active" id="ukuranDasar">
             <div class="inputsContainer">
-              <p>Ukuran Dasar</p>
               <div class="jarakDinding">
                 <label for="jarakDinding">Jarak Dinding</label>
                 <input
@@ -33,6 +32,7 @@
                   id="jarakDinding"
                   min="0"
                   max="1000"
+                  value="150"
                 />
                 <p id="jarakDindingValue"></p>
               </div>
@@ -44,6 +44,7 @@
                   id="tinggiBenda"
                   min="0"
                   max="2500"
+                  value="900"
                 />
                 <p id="tinggiBendaValue"></p>
               </div>
@@ -72,13 +73,13 @@
               </div>
               <div class="buttonAction">
                 <button onclick="jatuhBenda()">Jatuh</button>
-                <button onclick="translasiBenda()">Translasi</button>
+                <button onclick="GLB()">GLB</button>
+                <button onclick="GLBB()">GLBB</button>
               </div>
             </div>
           </div>
           <div class="inputs" id="gerakBenda">
             <div class="inputsContainer">
-              <p>Gerak Benda</p>
               <div class="kecepatanBenda">
                 <label for="kecepatanBenda">Kecepatan Benda</label>
                 <input
@@ -99,8 +100,21 @@
                   id="gayaBenda"
                   min="50"
                   max="500"
+                  value="50"
                 />
                 <p id="gayaBendaValue"></p>
+              </div>
+              <div class="gayaGesek">
+                <label for="gayaGesek">Gaya Gesek</label>
+                <input
+                  type="range"
+                  name="gayaGesek"
+                  id="gayaGesek"
+                  min="0"
+                  max="10"
+                  step="1"
+                />
+                <p id="gayaGesekValue"></p>
               </div>
             </div>
           </div>
