@@ -16,9 +16,7 @@ const gayaGesekID = document.getElementById("gayaGesek");
 let jarakDindingValText = document.getElementById("jarakDindingValue");
 let tinggiBendaValText = document.getElementById("tinggiBendaValue");
 let diameterBendaValText = document.getElementById("diameterBendaValue");
-let koefisienRestitusiValText = document.getElementById(
-  "koefisienRestitusiValue"
-);
+let koefisienRestitusiValText = document.getElementById("koefisienRestitusiValue");
 let kecepatanBendaValText = document.getElementById("kecepatanBendaValue");
 let gayaBendaValText = document.getElementById("gayaBendaValue");
 let gayaGesekValText = document.getElementById("gayaGesekValue");
@@ -128,7 +126,7 @@ function drawPixel(x, y, colour = "black") {
   } else {
     ctx.fillStyle = "black";
   }
-  ctx.fillRect(x, y, 1.1, 1.1);
+  ctx.fillRect(x, y, 2, 2);
 }
 
 // Garis Solid
@@ -198,18 +196,10 @@ function truncate(num, places) {
 }
 
 function Lingkaran(xc, yc, radius, theta = 0, maxTheta = Math.PI * 2) {
-  // garisDash(xc, yc, xc + radius, yc, "merah");
-  // garisDash(xc, yc, xc - radius, yc, "merah");
-  // garisDash(xc, yc, xc, yc - radius, "merah");
-  // garisDash(xc, yc, xc, yc + radius, "merah");
   while (truncate(theta, 3) <= maxTheta) {
     let xi = xc + radius * Math.cos(theta);
     let yi = yc + radius * Math.sin(theta);
     drawPixel(xi, yi, "black");
-    // if (truncate(theta, 3) == 0.785 || truncate(theta, 3) == 2.355 || truncate(theta, 3) == 3.925 || truncate(theta, 3) == 5.495) {
-    //   console.log(theta);
-    //   garisDDA(xc, yc, xi, yi, "abuTua");
-    // }
     theta += 0.001;
   }
 }
@@ -325,6 +315,7 @@ function refreshDraw() {
 /*
 Function for moving
 */
+let glbIsCLicked = false;
 let goUp = false;
 let goLeft = false;
 const height = [];
@@ -360,9 +351,6 @@ function dropAnimation(timestamp) {
         height.shift();
       }
     }
-    if (height.length > 0) {
-      requestAnimationFrame(dropAnimation);
-    }
   } else {
     kecepatanBendaID.value = kecepatanBendaInput - 1;
     refreshVelocity();
@@ -371,39 +359,48 @@ function dropAnimation(timestamp) {
     if (kecepatanBendaInput == 0) {
       goUp = false;
     }
+  }
+  if (height.length > 0) {
     requestAnimationFrame(dropAnimation);
   }
 }
 
 function GLBAnimation(timestamp) {
-  if (!goLeft) {
-    xMoveBola += kecepatanBendaInput;
-    allRefresh();
-    if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
-      thetaStart +=
-        (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) * Math.PI) /
-        180;
-      requestAnimationFrame(GLBAnimation);
+  if (glbIsCLicked) {
+    if (!goLeft) {
+      if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
+        xMoveBola += kecepatanBendaInput;
+        if (xBola + diameterBendaInput / 2  + kecepatanBendaInput > xDinding_Kanan) {
+          xMoveBola -= (xBola + diameterBendaInput/2 + kecepatanBendaInput) - xDinding_Kanan;
+        }
+        allRefresh();
+        thetaStart +=
+          (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) *
+            Math.PI) /
+          180;
+      } else {  
+        goLeft = true;
+      }
     } else {
-      goLeft = true;
-      requestAnimationFrame(GLBAnimation);
+      if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
+        xMoveBola -= kecepatanBendaInput;
+        if (xBola - diameterBendaInput / 2  - kecepatanBendaInput < xDinding_Kiri) {
+          xMoveBola += xDinding_Kiri - (xBola - diameterBendaInput/2 - kecepatanBendaInput);
+        }
+        allRefresh();
+        thetaStart -=
+          (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) *
+            Math.PI) /
+          180;
+      } else {
+        goLeft = false;
+      }
     }
-  } else {
-    xMoveBola -= kecepatanBendaInput;
-    allRefresh();
-    if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
-      thetaStart -=
-        (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) * Math.PI) /
-        180;
-      requestAnimationFrame(GLBAnimation);
-    } else {
-      goLeft = false;
-      requestAnimationFrame(GLBAnimation);
-    }
+    requestAnimationFrame(GLBAnimation);
   }
 }
 
-let velocityNowGLBB = gayaBendaInput;
+let velocityNowGLBB;
 
 function GLBBAnimation(timestamp) {
   if (!goLeft) {
@@ -414,13 +411,14 @@ function GLBBAnimation(timestamp) {
     allRefresh();
     if (velocityNowGLBB > 0) {
       if (xBola + diameterBendaInput / 2 < xDinding_Kanan) {
+        if (xBola + diameterBendaInput / 2  + kecepatanBendaInput > xDinding_Kanan) {
+          xMoveBola -= (xBola + diameterBendaInput/2 + kecepatanBendaInput) - xDinding_Kanan;
+        }
         thetaStart +=
           (((velocityNowGLBB * 1100) / (diameterBendaInput / 2)) * Math.PI) /
           180;
-        requestAnimationFrame(GLBBAnimation);
       } else {
         goLeft = true;
-        requestAnimationFrame(GLBBAnimation);
       }
     }
   } else {
@@ -431,31 +429,40 @@ function GLBBAnimation(timestamp) {
     allRefresh();
     if (velocityNowGLBB > 0) {
       if (xBola - diameterBendaInput / 2 > xDinding_Kiri) {
+        if (xBola - diameterBendaInput / 2  - kecepatanBendaInput < xDinding_Kiri) {
+          xMoveBola += xDinding_Kiri - (xBola - diameterBendaInput/2 - kecepatanBendaInput);
+        }
         thetaStart -=
           (((velocityNowGLBB * 1100) / (diameterBendaInput / 2)) * Math.PI) /
           180;
-        requestAnimationFrame(GLBBAnimation);
       } else {
         goLeft = false;
-        requestAnimationFrame(GLBBAnimation);
       }
     }
+  }
+  if (velocityNowGLBB > 0) {
+    requestAnimationFrame(GLBBAnimation);
   }
 }
 
 function jatuhBenda() {
   countingHeight();
-  console.log(height);
   kecepatanBendaID.value = 0;
   refreshVelocity();
   window.requestAnimationFrame(dropAnimation);
 }
 
 function GLB() {
-  window.requestAnimationFrame(GLBAnimation);
+  if (!glbIsCLicked) {
+    glbIsCLicked = true;
+    window.requestAnimationFrame(GLBAnimation);
+  } else {
+    glbIsCLicked = false;
+  }
 }
 
 function GLBB() {
+  velocityNowGLBB = gayaBendaInput;
   window.requestAnimationFrame(GLBBAnimation);
 }
 
