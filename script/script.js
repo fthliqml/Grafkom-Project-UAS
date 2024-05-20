@@ -375,7 +375,7 @@ function GLBAnimation(timestamp) {
         }
         allRefresh();
         thetaStart +=
-          (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) *
+          (((kecepatanBendaInput * 1500) / (diameterBendaInput / 2)) *
             Math.PI) /
           180;
       } else {  
@@ -389,7 +389,7 @@ function GLBAnimation(timestamp) {
         }
         allRefresh();
         thetaStart -=
-          (((kecepatanBendaInput * 1100) / (diameterBendaInput / 2)) *
+          (((kecepatanBendaInput * 1500) / (diameterBendaInput / 2)) *
             Math.PI) /
           180;
       } else {
@@ -415,7 +415,7 @@ function GLBBAnimation(timestamp) {
           xMoveBola -= (xBola + diameterBendaInput/2 + kecepatanBendaInput) - xDinding_Kanan;
         }
         thetaStart +=
-          (((velocityNowGLBB * 1100) / (diameterBendaInput / 2)) * Math.PI) /
+          (((velocityNowGLBB * 1500) / (diameterBendaInput / 2)) * Math.PI) /
           180;
       } else {
         goLeft = true;
@@ -433,7 +433,7 @@ function GLBBAnimation(timestamp) {
           xMoveBola += xDinding_Kiri - (xBola - diameterBendaInput/2 - kecepatanBendaInput);
         }
         thetaStart -=
-          (((velocityNowGLBB * 1100) / (diameterBendaInput / 2)) * Math.PI) /
+          (((velocityNowGLBB * 1500) / (diameterBendaInput / 2)) * Math.PI) /
           180;
       } else {
         goLeft = false;
