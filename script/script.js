@@ -474,5 +474,6 @@ function init() {
   refresh_Text_Input();
 }
 
+jatuhBenda();
 init();
 window.onload = init;
