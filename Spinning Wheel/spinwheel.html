@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinning Wheel</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+    <button id="spinButton">Spin</button>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+
+    <div class="color-picker">
+        <label for="sliceNumber">Pilih Slice:</label>
+        <select id="sliceNumber">
+            <option value="0">Slice 1</option>
+            <option value="1">Slice 2</option>
+            <option value="2">Slice 3</option>
+            <option value="3">Slice 4</option>
+            <option value="4">Slice 5</option>
+            <option value="5">Slice 6</option>
+        </select>
+        <label for="sliceColor">Pilih Warna:</label>
+        <input type="color" id="sliceColor" name="sliceColor" value="#FF0000">
+        <button id="changeColorButton">Ganti Warna</button>
+    </div>
+
+    <div id="current-slice-container">
+        <p id="current-slice-label"></p>
+        <p id="current-slice-value"></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

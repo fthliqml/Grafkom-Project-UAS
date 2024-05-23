@@ -1,0 +1,46 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Buat badan setinggi tampilan untuk memusatkan secara vertikal */
+    margin: 0; /* Hapus margin default pada body */
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    width: 200px;
+    height: 300px;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s, filter 0.3s;
+    background-size: cover;
+    background-position: center;
+}
+
+.card-1 {
+    background-image: url(back.jpg);
+}
+
+
+.cards .card:hover {
+    transform: scale(1.1);
+}
+
+.card:hover > .card:not(:hover) {
+    filter: blur(5px);
+    transform: scale(0.9);
+}
+
+.card a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2mm;
+}
+
